@@ -13,6 +13,7 @@
 
     <properties>
         <project.built.sourceEncoding>UTF-8</project.built.sourceEncoding>
+        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
