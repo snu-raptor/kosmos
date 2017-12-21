@@ -14,7 +14,7 @@
     <modules>
         <module>model</module>
         <module>dao</module>
-        <module>service</module>
+<!--        <module>service</module>-->
         <module>web</module>
         <module>util</module>
     </modules>
@@ -26,6 +26,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
+        <start-class>com.app.web.HowtocookApplication</start-class>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -59,10 +60,11 @@
                 <artifactId>spring-boot-starter-actuator</artifactId>
                 <version>${spring.boot.version}</version>
             </dependency>
-            <!--		<dependency>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-security</artifactId>
-                    </dependency>-->
+<!--            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -120,6 +122,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

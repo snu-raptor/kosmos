@@ -2,23 +2,29 @@ package com.app.model;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  * @author Viktar Kolbik
  * @since 12/16/17
  */
-@Table
+@Entity
+@Table(name = "Comment")
 @DynamicInsert
 @DynamicUpdate
-public class Comment
+public class Comment implements Serializable
 {
 
   @Id
@@ -29,15 +35,20 @@ public class Comment
   @Column( length = 1500, nullable = false)
   private String text;
 
-  @Column( nullable = false)
+  @Column(nullable = false)
+  @Convert(converter = Jsr310JpaConverters.LocalDateConverter.class)
   private LocalDate date;
 
   @Column( nullable = false)
   private boolean isHidden;
 
-  @ManyToOne(targetEntity = User.class)
-  @JoinColumn(name = "userId", nullable = false)
+  @ManyToOne(targetEntity = User.class, optional = false)
+  @JoinColumn(name = "user_id")
   private User user;
+
+/*  @ManyToOne(targetEntity = Article.class*//*, optional = false*//*)
+  @JoinColumn(name = "article_id")
+  private Article article;*/
 
   public Comment() {
   }
@@ -83,7 +94,7 @@ public class Comment
     isHidden = hidden;
     return this;
   }
-
+/*
   public User getUser() {
     return user;
   }
@@ -92,7 +103,7 @@ public class Comment
     this.user = user;
     return this;
   }
-
+*/
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;

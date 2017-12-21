@@ -2,9 +2,11 @@ package com.app.model;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -12,7 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -24,7 +28,7 @@ import java.util.Set;
 @Table(name = "Article")
 @DynamicInsert
 @DynamicUpdate
-public class Article
+public class Article implements Serializable
 {
   @Id
   @Column(name = "articleId")
@@ -38,16 +42,17 @@ public class Article
   private String text;
 
   @Column(name = "date", nullable = false)
+  @Convert(converter = Jsr310JpaConverters.LocalDateConverter.class)
   private LocalDate date;
 
   @Column(name = "isChecked", nullable = false)
   private boolean isChecked;
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
-  private Set<Comment> comments;
+  private Set<Comment> comments = new HashSet<>(  );
 
-  @ManyToOne
-  @JoinColumn(name = "userId", nullable = false)
+  @ManyToOne(targetEntity = User.class/*, optional = false*/)
+  @JoinColumn(name = "user_id")
   private User user;
 
   public Article() {
@@ -113,9 +118,9 @@ public class Article
     return comments;
   }
 
-  public Article setComments( Set<Comment> comments )
+  public Article setComments( Comment comments )
   {
-    this.comments = comments;
+    this.comments.add( comments );
     return this;
   }
 

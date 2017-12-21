@@ -2,22 +2,24 @@ package com.app.model;
 
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author Viktor
+ * @author Viktar
  * @since 6/16/17
  */
 @Entity
-@Table
+@Table(name = "User")
 @DynamicInsert
 @DynamicUpdate
-public class User {
-
+public class User implements Serializable
+{
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -33,6 +35,7 @@ public class User {
     private String password;
 
     @Column(nullable = false)
+    @Convert(converter = Jsr310JpaConverters.LocalDateConverter.class)
     private LocalDate registrationDate;
 
     @Column(nullable = false)
@@ -44,7 +47,8 @@ public class User {
     @Column(nullable = false, length = 50)
     private String role;
 
-    @Column( nullable = false)
+    @Column(nullable = false)
+    @Convert(converter = Jsr310JpaConverters.LocalDateConverter.class)
     private LocalDate lastVisit;
 
     /**
@@ -53,8 +57,11 @@ public class User {
     @Column( nullable = false, length = 2048)
     private String pathToAvatar;
 
-    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<Comment> comments = new HashSet<Comment>();
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Comment> comments = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<Article> articles = new HashSet<>();
 
     public User() {
     }
@@ -149,19 +156,25 @@ public class User {
         return this;
     }
 
-
     public Set<Comment> getComments() {
         return comments;
     }
-
+/*
     public User setComment(Comment comment) {
         comment.setUser(this);
         this.comments.add(comment);
         return this;
     }
+*/
+    public Set<Article> getArticles() {
+        return articles;
+    }
 
-
-
+    public User setArticles(Article article) {
+        article.setUser(this);
+        this.articles.add(article);
+        return this;
+    }
 
     @Override
     public boolean equals(Object o) {
